@@ -67,4 +67,20 @@ export class UserService {
     return userResult;
   }
 
+  async update(user: RegisterUserDto): Promise<UserResponse> {
+    const newUser = await this.userRepository.create(user);
+    
+    await this.userRepository.save(newUser);
+    const { password, createdAt, updatedAt, ...userResult } = newUser;
+    
+    if (user.franchisee) {
+      const franchisee = await this.franchiseeService.create({
+        ...user.franchisee,
+        user: userResult
+      });
+    }
+
+    return userResult;
+  }
+
 }

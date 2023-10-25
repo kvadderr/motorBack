@@ -11,6 +11,7 @@ import { join } from 'path';
       // or
       transport: {
         host: 'smtp.gmail.com',
+        port: 587,
         secure: false,
         auth: {
           user: 'sumbembaev.b@gmail.com',

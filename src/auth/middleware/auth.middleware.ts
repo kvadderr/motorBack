@@ -26,7 +26,6 @@ export class AuthMiddleware implements NestMiddleware {
         accessToken,
         process.env.ACCESS_TOKEN_SECRET,
       );
-      console.log('id in middleware', id);
       user = await this.userService.findOneById(id);   
     } catch (error) {
       throw new ForbiddenException('Please register or sign in.');

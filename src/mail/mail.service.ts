@@ -38,7 +38,7 @@ export class MailService {
     
     async sendFranchisorConfirmation(user: RegisterUserDto, token: string) {
         
-        const url =`example.com/auth/confirm?token=${token}`;
+        const url =`http://localhost:5173/signin`;
         
         await this.mailerService.sendMail({
             to: user.email,
@@ -63,6 +63,25 @@ export class MailService {
             context: {
                 name: user.email,
                 password: password,
+                //url,
+            },
+        });
+    }
+
+
+    async inviteFranchisee(user: RegisterUserDto, token: string) {
+
+        const url =`http://localhost:5173/register?token=${token}`;
+        
+
+        await this.mailerService.sendMail({
+            to: user.email,
+
+            subject: 'ВАШ ПАРОЛЬ  -  ',
+            template: './inviteFranchisee',
+            context: {
+                company_name: user.franchisee.franchisor_id,
+                url,
                 //url,
             },
         });

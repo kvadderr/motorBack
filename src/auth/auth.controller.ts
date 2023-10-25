@@ -53,6 +53,9 @@ export class AuthController {
             if (user.role === UserRole.ADMIN) await this.mailService.sendAdminConfirmation(user, password);
             if (user.role === UserRole.MANAGER) await this.mailService.sendAdminConfirmation(user, password);
             if (user.role === UserRole.FRANCHISOR) await this.mailService.sendFranchisorConfirmation(registerUserDto, tokens.accessToken);
+            if (user.role === UserRole.FRANCHISEE) {
+                await this.mailService.inviteFranchisee(registerUserDto, tokens.accessToken);
+            }
             return tokens;
         } catch (error) {
             console.log(error)
