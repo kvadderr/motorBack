@@ -25,7 +25,7 @@ export class AuthController {
         private readonly authService: AuthService,
         private readonly userService: UserService,
         private readonly mailService: MailService,
-    ) { }
+    ) {}
 
     @Post('register')
     async registerUser(
@@ -41,6 +41,7 @@ export class AuthController {
 
         try {
             const saltRounds = 12;
+
             const hashedPassword = registerUserDto.role !== UserRole.FRANCHISOR && registerUserDto.role !== UserRole.FRANCHISEE ? await bcrypt.hash(password, saltRounds) : "";
             const user = await this.userService.create({
                 ...registerUserDto,
@@ -49,13 +50,11 @@ export class AuthController {
 
             const { id, role, tokenVersion } = user;
             const tokens = this.authService.assignTokens(id, role, tokenVersion);
-            console.log(user, user.role)
-            if (user.role === UserRole.ADMIN) await this.mailService.sendAdminConfirmation(user, password);
-            if (user.role === UserRole.MANAGER) await this.mailService.sendAdminConfirmation(user, password);
+
+            if (user.role === UserRole.ADMIN || user.role === UserRole.MANAGER) await this.mailService.sendLoginData(user, password);
             if (user.role === UserRole.FRANCHISOR) await this.mailService.sendFranchisorConfirmation(registerUserDto, tokens.accessToken);
-            if (user.role === UserRole.FRANCHISEE) {
-                await this.mailService.inviteFranchisee(registerUserDto, tokens.accessToken);
-            }
+            if (user.role === UserRole.FRANCHISEE) await this.mailService.inviteFranchisee(registerUserDto, tokens.accessToken);
+
             return tokens;
         } catch (error) {
             console.log(error)
@@ -71,24 +70,9 @@ export class AuthController {
 
         try {
             existingUser = await this.userService.findUserWithPassword(email);
-
-
-
             isValid = await bcrypt.compare(loginPassword, existingUser.password);
         } catch (error) {
-            console.log(existingUser)
-            if (existingUser.role === UserRole.FRANCHISOR) {
-                const new_password = Math.random().toString(36).slice(-8);
-                const saltRounds = 12;
-                const hashedPassword = await bcrypt.hash(new_password, saltRounds);
-                console.log('existingUser', existingUser);
-                const user = await this.userService.create({
-                    ...existingUser,
-                    password: hashedPassword,
-                });
-                await this.mailService.sendFranchisorNewPassword(user, new_password);
-
-            }
+            console.log('existingUser', existingUser)
             throw new ForbiddenException('Username or password is invalid');
         }
 
@@ -108,7 +92,7 @@ export class AuthController {
             }
             throw new ForbiddenException('Username or password is invalid');
         }
-        console.log('existingUser', existingUser)
+        
         const { id, role, tokenVersion } = existingUser;
         const { password, ...user } = existingUser;
         console.log("auth controller", id, " role", role, " tokenV", tokenVersion)

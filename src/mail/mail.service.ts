@@ -8,29 +8,17 @@ import { RegisterUserDto } from 'src/auth/dto/registerUser.dto';
 export class MailService {
     constructor(private mailerService: MailerService) { }
 
-    async sendUserConfirmation(user: UserResponse) {
+    async sendLoginData(user: UserResponse, password: string) {
         await this.mailerService.sendMail({
             to: user.email,
 
             subject: 'Welcome to Nice App! Confirm your Email',
-            template: './confirmation',
-            context: {
-                name: user.email,
-                //url,
-            },
-        });
-    }
-
-    async sendAdminConfirmation(user: UserResponse, password: string) {
-        await this.mailerService.sendMail({
-            to: user.email,
-
-            subject: 'Welcome to Nice App! Confirm your Email',
-            template: './confirmation',
+            template: './sendLoginData',
             context: {
                 role: user.role,
-                name: user.email,
-                password: password
+                login: user.email,
+                password: password,
+                link: "http://194.58.90.70:5173"
                 //url,
             },
         });
@@ -38,7 +26,7 @@ export class MailService {
     
     async sendFranchisorConfirmation(user: RegisterUserDto, token: string) {
         
-        const url =`http://localhost:5173/signin`;
+        const url =`http://194.58.90.70:5173/signin`;
         
         await this.mailerService.sendMail({
             to: user.email,
@@ -54,7 +42,6 @@ export class MailService {
     }
 
     async sendFranchisorNewPassword(user: RegisterUserDto, password: string) {
-        console.log('send mess', user)
         await this.mailerService.sendMail({
             to: user.email,
 
@@ -71,7 +58,7 @@ export class MailService {
 
     async inviteFranchisee(user: RegisterUserDto, token: string) {
 
-        const url =`http://localhost:5173/register?token=${token}`;
+        const url =`http://194.58.90.70:5173/register?token=${token}`;
         
 
         await this.mailerService.sendMail({

@@ -7,8 +7,6 @@ import { join } from 'path';
 @Module({
   imports: [
     MailerModule.forRoot({
-      // transport: 'smtps://user@example.com:topsecret@smtp.example.com',
-      // or
       transport: {
         host: 'smtp.gmail.com',
         port: 587,
