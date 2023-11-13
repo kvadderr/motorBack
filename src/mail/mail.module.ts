@@ -3,9 +3,13 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { join } from 'path';
+import { FranchisorService } from 'src/franchisor/franchisor.service';
+import { FranchisorModule } from 'src/franchisor/franchisor.module';
+import { forwardRef } from '@nestjs/common';
 
 @Module({
   imports: [
+    FranchisorModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.gmail.com',

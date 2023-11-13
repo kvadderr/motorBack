@@ -4,171 +4,23 @@
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            color-scheme: light;
-            supported-color-schemes: light;
-        }
-
-        p {
-            margin: 0;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #eeeeee !important;
-            }
-        }
-
-        body {
-            font-family: 'Noto Sans', sans-serif;
-            margin: 0;
-            padding: 0;
-            min-width: 100% !important;
-            line-height: 1.4;
-        }
-
-        .logo {
-            width: 234px;
-            margin: 144px 0 68px 0;
-        }
-
-        .email-container {
-            margin: auto;
-            width: 600px;
-        }
-
-        .line {
-            width: 100%;
-            font-weight: normal;
-            font-stretch: normal;
-            font-style: normal;
-            font-size: 20px;
-            line-height: 1.4;
-            margin-bottom: 32px;
-            display: block;
-            letter-spacing: normal;
-            color: #020202 !important;
-        }
-
-        .submit-button {
-            cursor: pointer;
-            width: 100%;
-            display: block;
-            border-radius: 8px;
-            background-color: #eb0028;
-            font-size: 20px;
-            font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.4;
-            text-align: center;
-            color: #fff !important;
-            text-decoration: none;
-            padding: 24px 0;
-        }
-
-        .footer {
-            margin: 0 auto;
-            display: block;
-            text-align: center;
-            font-size: 48px;
-            line-height: 14px;
-            padding-top: 32px;
-            box-sizing: border-box;
-        }
-
-        .footer-link {
-            place-self: center;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 14px;
-            letter-spacing: normal;
-            margin-left: 10px;
-            color: #adadad !important;
-        }
-
-        .inline-footer {
-            text-align: center;
-            position: relative;
-            display: inline-block;
-            line-height: 14px;
-        }
-
-        .responsive-separation {
-            display: none;
-        }
-
-        strong {
-            font-weight: 600;
-        }
-
-        @media only screen and (max-width: 620px),
-        screen and (max-device-width: 620px) {
-            .submit-button {
-                font-size: 16px;
-                line-height: 1.5;
-                padding: 13px 0;
-            }
-
-            .email-container {
-                width: 100%;
-                padding: 24px;
-                box-sizing: border-box;
-            }
-
-            .logo {
-                width: 146px;
-                margin-bottom: 40px;
-                margin-top: 48px;
-            }
-
-            .footer {
-                padding-top: 10px;
-            }
-
-            .inline-footer {
-                text-align: center;
-                display: inline-block;
-            }
-
-            .responsive-separation {
-                clear: both;
-                display: block;
-                width: 0;
-                height: 0;
-            }
-
-            .line {
-                font-size: 16px;
-                line-height: 1.5;
-                margin-bottom: 20px;
-            }
-
-            .inline-footer {
-                display: block;
-            }
-        }
-    </style>
+    <link href="http://localhost:3000/public/style.css" rel="stylesheet">
 </head>
 
 <body>
     <div class='email-container'>
         <img class='logo' width='120' src='https://motorlms.ru/img/icon.svg' />
-        <p class='line'>Вас добавили на платформу MotorLMS в качестве <strong>аккаунт-менеджера</strong>, теперь Вы
+        <p class='line'>Вас добавили на платформу MotorLMS, теперь Вы
             можете:
             <br>• Добавлять Франчайзеров
             <br>• Создавать рабочие пространства
             <br>• Работать с документами
         </p>
-        <p class='line'>Данные для входа: 
+        <p class='line'>Данные для входа:
             <br>• {{ login }}
             <br>• {{ password}}
         </p>
-        
+
         <a class='submit-button' href='{{link}}'>Войти</a>
     </div>
 </body>

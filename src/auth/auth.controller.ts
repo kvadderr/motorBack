@@ -31,7 +31,7 @@ export class AuthController {
     async registerUser(
         @Body() registerUserDto: RegisterUserDto,
     ): Promise<LoginResponse> {
-        const { email, password, franchisor, ...rest } = registerUserDto;
+        const { email, password, ...rest } = registerUserDto;
 
         const existingUser = await this.userService.findOneByEmail(email);
 
@@ -72,7 +72,6 @@ export class AuthController {
             existingUser = await this.userService.findUserWithPassword(email);
             isValid = await bcrypt.compare(loginPassword, existingUser.password);
         } catch (error) {
-            console.log('existingUser', existingUser)
             throw new ForbiddenException('Username or password is invalid');
         }
 
@@ -82,7 +81,6 @@ export class AuthController {
                 const new_password = Math.random().toString(36).slice(-8);
                 const saltRounds = 12;
                 const hashedPassword = await bcrypt.hash(new_password, saltRounds);
-                console.log('existingUser', existingUser);
                 const user = await this.userService.create({
                     ...existingUser,
                     password: hashedPassword,
@@ -95,7 +93,6 @@ export class AuthController {
         
         const { id, role, tokenVersion } = existingUser;
         const { password, ...user } = existingUser;
-        console.log("auth controller", id, " role", role, " tokenV", tokenVersion)
         const tokens = this.authService.assignTokens(id, role, tokenVersion);
         return tokens;
     }

@@ -1,9 +1,11 @@
 import {
     Entity,
-    Column
+    Column,
+    OneToMany
 } from 'typeorm';
 
 import { AppEntity } from '../base/BaseEntity';
+import { FolderAccess } from 'src/folder-access/entities/folder-access.entity';
 
 export enum UserRole {
     ROOT = 'root',
@@ -15,7 +17,7 @@ export enum UserRole {
 }
 
 @Entity({ name: 'user' })
-export class User extends AppEntity{
+export class User extends AppEntity {
 
     @Column({ unique: true, length: 255 })
     email: string;
@@ -26,6 +28,9 @@ export class User extends AppEntity{
     @Column({ unique: true, nullable: true })
     phone: string;
 
+    @Column({ default: 'Offline' })
+    status: string;
+
     @Column({
         type: 'enum',
         enum: UserRole,
@@ -35,4 +40,7 @@ export class User extends AppEntity{
 
     @Column({ default: 0 })
     tokenVersion: number;
+
+    @OneToMany(() => FolderAccess, folderAccess => folderAccess.user)
+    folderAccess: FolderAccess[];
 }

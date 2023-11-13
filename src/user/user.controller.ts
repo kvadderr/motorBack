@@ -12,7 +12,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @Roles('admin', 'root')
   async findAll(): Promise<User[]> {
     try {
       return await this.userService.findAll();
@@ -26,7 +25,7 @@ export class UserController {
     try {
       return req.user;
     } catch (error) {
-      throw new NotFoundException(`Cannot find products`);
+      throw new NotFoundException(`Error`);
     }
   }
 

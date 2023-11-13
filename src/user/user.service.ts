@@ -51,8 +51,10 @@ export class UserService {
     const newUser = await this.userRepository.create(user);
     await this.userRepository.save(newUser);
     const { password, createdAt, updatedAt, ...userResult } = newUser;
+    console.log(user)
+    console.log('userResult', userResult)
     if (user.franchisor) {
-      const franchisor = await this.franchisorService.create({
+      await this.franchisorService.create({
         ...user.franchisor,
         user: userResult
       });

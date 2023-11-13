@@ -7,6 +7,7 @@ export class RegisterUserDto {
   email: string;
   password?: string;
   role: UserRole;
+  franchaisor_id?: number;
   franchisor?: CreateFranchisorDto;
   franchisee?: CreateFranchiseeDto;
 }

@@ -25,9 +25,9 @@ export class SpaceworkService {
     return await this.spaceworkRepository.find();
   }
 
-  async findByFranchaisor(id: number) {
+  async findAllByFranchaisor(id: number) {
     return await this.spaceworkRepository.find({
-      where: { franchisor_id: id }
+      where: { user_id: id }
     })
   }
 

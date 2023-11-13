@@ -1,7 +1,5 @@
-import { Franchisor } from "src/franchisor/entities/franchisor.entity";
-
 export class CreateSpaceworkDto {
-    avatar: string;
+    avatar?: string;
     name: string;
-    franchisor_id: number;
+    user_id: number;
 }

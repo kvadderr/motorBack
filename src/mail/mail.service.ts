@@ -3,10 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { User } from './../user/user.entity';
 import { UserResponse } from 'src/user/type/userResponse';
 import { RegisterUserDto } from 'src/auth/dto/registerUser.dto';
+import { FranchisorService } from 'src/franchisor/franchisor.service';
 
 @Injectable()
 export class MailService {
-    constructor(private mailerService: MailerService) { }
+    constructor(
+        private mailerService: MailerService,
+        private franchaisorService: FranchisorService
+    ) { }
 
     async sendLoginData(user: UserResponse, password: string) {
         await this.mailerService.sendMail({
@@ -23,11 +27,13 @@ export class MailService {
             },
         });
     }
-    
+
     async sendFranchisorConfirmation(user: RegisterUserDto, token: string) {
-        
-        const url =`http://194.58.90.70:5173/signin`;
-        
+
+        console.log('user in sedn mail', user)
+
+        const url = `http://194.58.90.70:5173/signin`;
+
         await this.mailerService.sendMail({
             to: user.email,
 
@@ -57,18 +63,18 @@ export class MailService {
 
 
     async inviteFranchisee(user: RegisterUserDto, token: string) {
-
-        const url =`http://194.58.90.70:5173/register?token=${token}`;
-        
-
+        console.log(user);
+        const link = `http://194.58.90.70:5173/register?token=${token}`;
+        const comapany = (await this.franchaisorService.findOne(user.franchisee.franchisor_id)).company;
+        console.log(comapany)
         await this.mailerService.sendMail({
             to: user.email,
 
             subject: 'ВАШ ПАРОЛЬ  -  ',
             template: './inviteFranchisee',
             context: {
-                company_name: user.franchisee.franchisor_id,
-                url,
+                company_name: comapany,
+                link,
                 //url,
             },
         });
