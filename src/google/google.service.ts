@@ -64,7 +64,7 @@ export class GoogleService {
             await drive.permissions.create({
                 fileId: fileId,
                 requestBody: {
-                    role: 'reader',
+                    role: 'writer',
                     type: 'anyone',
                 },
             });
