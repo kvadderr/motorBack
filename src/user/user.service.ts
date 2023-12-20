@@ -36,6 +36,7 @@ export class UserService {
         'role',
         'tokenVersion',
         'password',
+        'isComplete'
       ],
       where: { email },
     });
@@ -51,8 +52,6 @@ export class UserService {
     const newUser = await this.userRepository.create(user);
     await this.userRepository.save(newUser);
     const { password, createdAt, updatedAt, ...userResult } = newUser;
-    console.log(user)
-    console.log('userResult', userResult)
     if (user.franchisor) {
       await this.franchisorService.create({
         ...user.franchisor,
@@ -60,12 +59,11 @@ export class UserService {
       });
     }
     if (user.franchisee) {
-      const franchisee = await this.franchiseeService.create({
+      await this.franchiseeService.create({
         ...user.franchisee,
         user: userResult
       });
     }
-
     return userResult;
   }
 }

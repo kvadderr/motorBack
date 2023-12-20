@@ -10,4 +10,5 @@ export class RegisterUserDto {
   franchaisor_id?: number;
   franchisor?: CreateFranchisorDto;
   franchisee?: CreateFranchiseeDto;
+  isComplete?: boolean;
 }

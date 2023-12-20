@@ -31,6 +31,9 @@ export class User extends AppEntity {
     @Column({ default: 'Offline' })
     status: string;
 
+    @Column({ default: true })
+    isComplete: boolean;
+
     @Column({
         type: 'enum',
         enum: UserRole,

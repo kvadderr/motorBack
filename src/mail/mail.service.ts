@@ -47,16 +47,16 @@ export class MailService {
         });
     }
 
+
     async sendFranchisorNewPassword(user: RegisterUserDto, password: string) {
+        console.log(user, password)
         await this.mailerService.sendMail({
             to: user.email,
-
-            subject: 'ВАШ ПАРОЛЬ  -  ',
-            template: './sendPassword',
+            subject: 'Временный пароль',
+            template: './sendCode',
             context: {
                 name: user.email,
-                password: password,
-                //url,
+                code: password,
             },
         });
     }

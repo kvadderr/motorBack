@@ -15,6 +15,10 @@ export class AuthService {
         });
     }
 
+    createRegisterToken({ userId, role }: AccessTokenPayload): string {
+        return sign({ userId, role }, process.env.REGISTER_TOKEN_SECRET);
+    }
+
     createRefreshToken({ userId, tokenVersion }: RefreshTokenPayload): string {
         return sign({ userId, tokenVersion }, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: '7d',
@@ -27,6 +31,18 @@ export class AuthService {
             refreshToken: this.createRefreshToken({ userId, tokenVersion }),
         };
     }
+
+    async generateRandomString(length: number): Promise<string> {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+      
+        for (let i = 0; i < length; i++) {
+          const randomIndex = Math.floor(Math.random() * characters.length);
+          result += characters.charAt(randomIndex);
+        }
+      
+        return result;
+      }
 
     /** If refresh token is not expired, re-assign new access token and refresh token */
     async refreshTokens(refreshToken: string) {

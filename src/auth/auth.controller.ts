@@ -25,14 +25,14 @@ export class AuthController {
         private readonly authService: AuthService,
         private readonly userService: UserService,
         private readonly mailService: MailService,
-    ) {}
+    ) { }
 
     @Post('register')
     async registerUser(
         @Body() registerUserDto: RegisterUserDto,
     ): Promise<LoginResponse> {
         const { email, password, ...rest } = registerUserDto;
-
+        console.log('registerUserDto', registerUserDto);
         const existingUser = await this.userService.findOneByEmail(email);
 
         if (existingUser) {
@@ -71,30 +71,41 @@ export class AuthController {
         try {
             existingUser = await this.userService.findUserWithPassword(email);
             isValid = await bcrypt.compare(loginPassword, existingUser.password);
+            if (!isValid) { throw new ForbiddenException('Username or password is invalid') }
         } catch (error) {
             throw new ForbiddenException('Username or password is invalid');
         }
 
-        if (!isValid) {
-
-            if (existingUser.role === UserRole.FRANCHISOR) {
-                const new_password = Math.random().toString(36).slice(-8);
-                const saltRounds = 12;
-                const hashedPassword = await bcrypt.hash(new_password, saltRounds);
-                const user = await this.userService.create({
-                    ...existingUser,
-                    password: hashedPassword,
-                });
-                await this.mailService.sendFranchisorNewPassword(user, new_password);
-
-            }
-            throw new ForbiddenException('Username or password is invalid');
-        }
-        
         const { id, role, tokenVersion } = existingUser;
         const { password, ...user } = existingUser;
         const tokens = this.authService.assignTokens(id, role, tokenVersion);
         return tokens;
+    }
+
+    @Post('sendCode')
+    async sendCode(@Body() loginUserDto: LoginUserDto) {
+        const { email } = loginUserDto;
+        const saltRounds = 12;
+        let existingUser: Omit<User, 'createdAt' | 'updatedAt'>;
+
+        try {
+            const password = await this.authService.generateRandomString(7);
+            console.log('loginUserDto', loginUserDto)
+            console.log('email', email)
+            const hashedPassword = await bcrypt.hash(password, saltRounds)    
+            existingUser = await this.userService.findUserWithPassword(email);
+            console.log('existingUser', existingUser)
+            await this.mailService.sendFranchisorNewPassword(existingUser, password);
+            await this.userService.create({
+                ...existingUser,
+                password: hashedPassword,
+            });
+        } catch (error) {
+            console.error('Error in sendCode:', error);
+            throw new ForbiddenException('Username or password is invalid');
+        }
+
+        return;
     }
 
     @Post('refresh-token')
